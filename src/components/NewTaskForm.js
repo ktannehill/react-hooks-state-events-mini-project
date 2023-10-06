@@ -1,16 +1,30 @@
-import React from "react";
+import {useState} from "react";
 
-function NewTaskForm() {
+function NewTaskForm({categories, onTaskFormSubmit}) {
+  const [formData, setFormData] = useState({
+    text: "",
+    category: ""
+  })
+
+  const handleChange = (e) => {
+    const key = e.target.name
+    const value = e.target.value
+    setFormData({...formData, [key]: value})
+  }
+
+  const displayCategories = categories.filter(category => category !== "All")
+    .map(category => <option key={category} value={category}>{category}</option>)
+
   return (
-    <form className="new-task-form">
+    <form className="new-task-form" onSubmit={(e) => onTaskFormSubmit(formData, e)}>
       <label>
         Details
-        <input type="text" name="text" />
+        <input type="text" name="text" value={formData.text} onChange={handleChange}/>
       </label>
       <label>
         Category
-        <select name="category">
-          {/* render <option> elements for each category here */}
+        <select name="category" value={formData.category} onChange={handleChange}>
+          {displayCategories}
         </select>
       </label>
       <input type="submit" value="Add task" />
